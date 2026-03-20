@@ -22,7 +22,7 @@ body{
   color:white;
 }
 
-/* HEADER FIXO (APP STYLE) */
+/* HEADER */
 header{
   position:fixed;
   top:0;
@@ -35,7 +35,6 @@ header{
 
 header h1{
   margin:0;
-  font-size:18px;
 }
 
 header button{
@@ -49,18 +48,23 @@ header button{
   color:white;
 }
 
-/* ESPAÇO PRA NÃO FICAR ATRÁS DO HEADER */
+/* CONTAINER DESKTOP */
 .main{
-  margin-top:70px;
-  padding:15px;
+  margin-top:80px;
+  padding:20px;
+}
+
+.grid{
+  display:flex;
+  gap:20px;
 }
 
 /* CARDS */
 .card{
   background:#1f4068;
-  padding:15px;
+  padding:20px;
   border-radius:12px;
-  margin-bottom:15px;
+  flex:1;
 }
 
 /* AVATAR */
@@ -69,7 +73,7 @@ header button{
 }
 
 .avatar img{
-  width:80px;
+  width:100px;
 }
 
 /* INPUTS */
@@ -86,20 +90,18 @@ button{
   color:white;
 }
 
-/* XP BAR */
+/* XP */
 .xp-bar{
   width:100%;
   height:8px;
   background:#333;
   border-radius:10px;
   overflow:hidden;
-  margin-top:5px;
 }
 
 #xpFill{
   height:100%;
   background:#00ffae;
-  width:0%;
 }
 
 /* MISSÕES */
@@ -109,10 +111,18 @@ li{
   padding:10px;
   border-radius:8px;
   margin-top:10px;
-  font-size:14px;
 }
 
-/* PERFIL (MODAL SIMPLES) */
+/* CALENDÁRIO */
+#calendar{
+  margin-top:20px;
+  background:white;
+  color:black;
+  border-radius:10px;
+  padding:10px;
+}
+
+/* PERFIL */
 #profileBox{
   display:none;
   position:fixed;
@@ -120,9 +130,9 @@ li{
   left:0;
   width:100%;
   height:100%;
-  background:#000000dd;
-  padding:20px;
+  background:#000000cc;
   z-index:2000;
+  padding:20px;
 }
 
 .profile-content{
@@ -131,18 +141,23 @@ li{
   border-radius:12px;
 }
 
-/* CALENDÁRIO */
-#calendar{
-  margin-top:15px;
-  background:white;
-  border-radius:10px;
-  padding:5px;
-  color:black;
-}
+/* MOBILE */
+@media (max-width:768px){
 
-/* MELHORAR FULLCALENDAR NO MOBILE */
-.fc{
-  font-size:12px;
+  .grid{
+    flex-direction:column;
+  }
+
+  header button{
+    position:static;
+    margin-top:10px;
+    width:100%;
+  }
+
+  .fc{
+    font-size:12px;
+  }
+
 }
 
 </style>
@@ -153,7 +168,7 @@ li{
 
 <header>
 <h1>Life RPG</h1>
-<button onclick="openProfile()">👤</button>
+<button onclick="openProfile()">👤 Perfil</button>
 </header>
 
 <div id="profileBox">
@@ -163,7 +178,6 @@ li{
 
 <input id="profileName" placeholder="Nome">
 <input id="profileEmail" placeholder="Email">
-
 <input type="file" id="profileImage">
 
 <img id="profilePreview" width="80">
@@ -175,6 +189,8 @@ li{
 </div>
 
 <div class="main">
+
+<div class="grid">
 
 <!-- PERSONAGEM -->
 <div class="card">
@@ -230,19 +246,19 @@ li{
 
 </div>
 
+</div>
+
 <!-- CALENDÁRIO -->
 <div class="card">
-
 <h2>Calendário</h2>
 <div id="calendar"></div>
-
 </div>
 
 </div>
 
 <script>
 
-/* TEU JS ORIGINAL INTACTO */
+/* TEU JS ORIGINAL */
 
 let xp = Number(localStorage.getItem("xp")) || 0
 let level = Number(localStorage.getItem("level")) || 1
@@ -348,9 +364,9 @@ calendar=new FullCalendar.Calendar(calendarEl,{
 locale:"pt-br",
 initialView:"dayGridMonth",
 headerToolbar:{
-left:"prev,next",
+left:"prev,next today",
 center:"title",
-right:""
+right:"dayGridMonth,timeGridWeek"
 },
 
 dateClick:function(info){

@@ -15,51 +15,168 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/pt-br.global.min.js"></script>
 
 <style>
-/* RESPONSIVO */
-@media (max-width: 768px){
+
+/* BASE */
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+}
+
+header{
+  background:#162447;
+  color:white;
+  padding:15px;
+  position:relative;
+}
+
+header h1{
+  margin:0;
+  text-align:center;
+}
+
+header button{
+  position:absolute;
+  right:15px;
+  top:15px;
+}
+
+/* CONTAINER */
+.container{
+  display:flex;
+  gap:20px;
+  padding:20px;
+}
+
+/* CARDS */
+.character-card, .missions{
+  background:#1f4068;
+  padding:20px;
+  border-radius:10px;
+  color:white;
+  width:50%;
+}
+
+.avatar{
+  text-align:center;
+}
+
+.avatar img{
+  max-width:120px;
+}
+
+/* INPUTS */
+input, select, button{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-top:5px;
+}
+
+button{
+  cursor:pointer;
+  background:#e43f5a;
+  color:white;
+}
+
+/* XP BAR */
+.xp-bar{
+  width:100%;
+  height:10px;
+  background:#ccc;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#xpFill{
+  height:100%;
+  background:#00ffae;
+  width:0%;
+}
+
+/* MISSÕES */
+ul{
+  padding:0;
+}
+
+li{
+  list-style:none;
+  margin-top:10px;
+  background:#162447;
+  padding:10px;
+  border-radius:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+/* CALENDÁRIO */
+#calendar{
+  padding:10px;
+}
+
+/* PERFIL */
+#profileBox{
+  display:none;
+  padding:20px;
+  background:#1f4068;
+  margin:20px;
+  border-radius:10px;
+  color:white;
+}
+
+/* RESPONSIVO BONITO (AGORA SIM) */
+@media (max-width:768px){
 
   header{
-    text-align: center;
-    padding: 15px;
+    text-align:center;
   }
 
   header button{
-    position: static !important;
-    margin-top: 10px;
+    position:static;
+    margin-top:10px;
+    width:100%;
   }
 
   .container{
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+    flex-direction:column;
+    padding:10px;
   }
 
   .character-card,
   .missions{
-    width: 100%;
-    margin-bottom: 20px;
+    width:100%;
   }
 
   input, select, button{
-    width: 100%;
-    margin-bottom: 10px;
+    width:100%;
+    font-size:16px;
+  }
+
+  li{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  li button{
+    width:100%;
+  }
+
+  .avatar img{
+    max-width:90px;
   }
 
   #calendar{
-    width: 100%;
-    overflow-x: auto;
+    overflow-x:auto;
   }
 
-  .calendar-title{
-    text-align: center;
-    font-size: 1.4rem;
+  .fc{
+    font-size:12px;
   }
 
-  img{
-    max-width: 100%;
-    height: auto;
-  }
 }
+
 </style>
 
 </head>
@@ -67,18 +184,11 @@
 <body>
 
 <header>
-
 <h1>Life RPG</h1>
-
-<button onclick="openProfile()" style="position:absolute;right:20px;top:20px">
-👤 Perfil
-</button>
-
+<button onclick="openProfile()">👤 Perfil</button>
 </header>
 
-
-<div id="profileBox" style="display:none;padding:20px;background:#1f4068;margin:20px;border-radius:10px">
-
+<div id="profileBox">
 <h2>Seu Perfil</h2>
 
 <input id="profileName" placeholder="Nome"><br><br>
@@ -91,10 +201,7 @@
 <br><br>
 
 <button onclick="saveProfile()">Salvar Perfil</button>
-
 </div>
-
-
 
 <div class="container">
 
@@ -130,8 +237,6 @@
 
 </div>
 
-
-
 <div class="missions">
 
 <h2>Missões</h2>
@@ -156,15 +261,12 @@
 
 </div>
 
-
-
-<h2 class="calendar-title">Calendário</h2>
-
+<h2 style="text-align:center">Calendário</h2>
 <div id="calendar"></div>
 
-
-
 <script>
+
+/* SEU JS ORIGINAL (não mexi pra não quebrar teu sistema) */
 
 let xp = Number(localStorage.getItem("xp")) || 0
 let level = Number(localStorage.getItem("level")) || 1
@@ -174,7 +276,6 @@ let reminders = JSON.parse(localStorage.getItem("reminders")) || []
 let calendar
 
 function loadData(){
-
 document.getElementById("xp").innerText = xp
 document.getElementById("level").innerText = level
 document.getElementById("xpFill").style.width = xp+"%"
@@ -189,69 +290,51 @@ document.getElementById("characterSelect").value=savedCharacter
 }
 
 renderMissions()
-
 }
 
 function changeName(){
-
 const name=document.getElementById("nameInput").value
 document.getElementById("playerName").innerText=name
 localStorage.setItem("playerName",name)
-
 }
 
 function changeCharacter(character){
-
 document.getElementById("character").src="assets/characters/"+character
 localStorage.setItem("character",character)
-
 }
 
 function addMission(){
-
 const mission=document.getElementById("missionInput").value
 const xpValue=parseInt(document.getElementById("xpInput").value)
 const emoji=document.getElementById("emoji").value
 
 if(!mission || !xpValue) return
 
-const missionData={
-text:mission,
-xp:xpValue,
-emoji:emoji
-}
+const missionData={ text:mission, xp:xpValue, emoji:emoji }
 
 missions.push(missionData)
-
 localStorage.setItem("missions",JSON.stringify(missions))
 
 renderMissions()
-
 }
 
 function renderMissions(){
-
 const list=document.getElementById("missionList")
 list.innerHTML=""
 
 missions.forEach((m,i)=>{
-
 const li=document.createElement("li")
 
 li.innerHTML=`
-${m.emoji} ${m.text}
-(+${m.xp} XP)
+${m.emoji} ${m.text} (+${m.xp} XP)
 <button onclick="completeMission(${i})">Concluir</button>
 `
 
 list.appendChild(li)
-
 })
-
 }
 
 function completeMission(index){
-
 xp+=missions[index].xp
 
 if(xp>=100){
@@ -266,38 +349,28 @@ localStorage.setItem("xp",xp)
 localStorage.setItem("level",level)
 
 loadData()
-
 }
 
 function openProfile(){
-
 const box=document.getElementById("profileBox")
 box.style.display=box.style.display==="none"?"block":"none"
-
 }
 
 function saveProfile(){
-
 const name=document.getElementById("profileName").value
 const email=document.getElementById("profileEmail").value
 
 localStorage.setItem("profileName",name)
 localStorage.setItem("profileEmail",email)
-
 }
-
-/* CALENDÁRIO */
 
 document.addEventListener("DOMContentLoaded",function(){
 
 const calendarEl=document.getElementById("calendar")
 
 calendar=new FullCalendar.Calendar(calendarEl,{
-
 locale:"pt-br",
-
 initialView:"dayGridMonth",
-
 headerToolbar:{
 left:"prev,next today",
 center:"title",
@@ -305,34 +378,22 @@ right:"dayGridMonth,timeGridWeek"
 },
 
 dateClick:function(info){
-
 let text=prompt("Escreva um lembrete:")
-
 if(!text) return
 
-const reminder={
-title:"📝 "+text,
-start:info.dateStr
-}
+const reminder={ title:"📝 "+text, start:info.dateStr }
 
 reminders.push(reminder)
-
 localStorage.setItem("reminders",JSON.stringify(reminders))
-
 calendar.addEvent(reminder)
-
 }
-
 })
 
 calendar.render()
 
-reminders.forEach(r=>{
-calendar.addEvent(r)
-})
+reminders.forEach(r=>{ calendar.addEvent(r) })
 
 loadData()
-
 })
 
 </script>

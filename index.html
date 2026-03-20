@@ -4,6 +4,8 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Life RPG</title>
 
 <link rel="stylesheet" href="style.css">
@@ -11,6 +13,54 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/pt-br.global.min.js"></script>
+
+<style>
+/* RESPONSIVO */
+@media (max-width: 768px){
+
+  header{
+    text-align: center;
+    padding: 15px;
+  }
+
+  header button{
+    position: static !important;
+    margin-top: 10px;
+  }
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .character-card,
+  .missions{
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  input, select, button{
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #calendar{
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .calendar-title{
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  img{
+    max-width: 100%;
+    height: auto;
+  }
+}
+</style>
 
 </head>
 
@@ -123,8 +173,6 @@ let reminders = JSON.parse(localStorage.getItem("reminders")) || []
 
 let calendar
 
-
-
 function loadData(){
 
 document.getElementById("xp").innerText = xp
@@ -144,8 +192,6 @@ renderMissions()
 
 }
 
-
-
 function changeName(){
 
 const name=document.getElementById("nameInput").value
@@ -154,16 +200,12 @@ localStorage.setItem("playerName",name)
 
 }
 
-
-
 function changeCharacter(character){
 
 document.getElementById("character").src="assets/characters/"+character
 localStorage.setItem("character",character)
 
 }
-
-
 
 function addMission(){
 
@@ -187,8 +229,6 @@ renderMissions()
 
 }
 
-
-
 function renderMissions(){
 
 const list=document.getElementById("missionList")
@@ -210,8 +250,6 @@ list.appendChild(li)
 
 }
 
-
-
 function completeMission(index){
 
 xp+=missions[index].xp
@@ -231,16 +269,12 @@ loadData()
 
 }
 
-
-
 function openProfile(){
 
 const box=document.getElementById("profileBox")
 box.style.display=box.style.display==="none"?"block":"none"
 
 }
-
-
 
 function saveProfile(){
 
@@ -251,8 +285,6 @@ localStorage.setItem("profileName",name)
 localStorage.setItem("profileEmail",email)
 
 }
-
-
 
 /* CALENDÁRIO */
 
@@ -294,8 +326,6 @@ calendar.addEvent(reminder)
 })
 
 calendar.render()
-
-/* carregar lembretes */
 
 reminders.forEach(r=>{
 calendar.addEvent(r)

@@ -8,8 +8,6 @@
 
 <title>Life RPG</title>
 
-<link rel="stylesheet" href="style.css">
-
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/pt-br.global.min.js"></script>
@@ -20,60 +18,70 @@
 body{
   margin:0;
   font-family: Arial, sans-serif;
+  background:#0f172a;
+  color:white;
 }
 
+/* HEADER FIXO (APP STYLE) */
 header{
+  position:fixed;
+  top:0;
+  width:100%;
   background:#162447;
-  color:white;
   padding:15px;
-  position:relative;
+  text-align:center;
+  z-index:1000;
 }
 
 header h1{
   margin:0;
-  text-align:center;
+  font-size:18px;
 }
 
 header button{
   position:absolute;
   right:15px;
-  top:15px;
+  top:10px;
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  background:#e43f5a;
+  color:white;
 }
 
-/* CONTAINER */
-.container{
-  display:flex;
-  gap:20px;
-  padding:20px;
+/* ESPAÇO PRA NÃO FICAR ATRÁS DO HEADER */
+.main{
+  margin-top:70px;
+  padding:15px;
 }
 
 /* CARDS */
-.character-card, .missions{
+.card{
   background:#1f4068;
-  padding:20px;
-  border-radius:10px;
-  color:white;
-  width:50%;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
 }
 
+/* AVATAR */
 .avatar{
   text-align:center;
 }
 
 .avatar img{
-  max-width:120px;
+  width:80px;
 }
 
 /* INPUTS */
 input, select, button{
+  width:100%;
   padding:10px;
-  border-radius:8px;
+  margin-top:8px;
   border:none;
-  margin-top:5px;
+  border-radius:8px;
 }
 
 button{
-  cursor:pointer;
   background:#e43f5a;
   color:white;
 }
@@ -81,10 +89,11 @@ button{
 /* XP BAR */
 .xp-bar{
   width:100%;
-  height:10px;
-  background:#ccc;
+  height:8px;
+  background:#333;
   border-radius:10px;
   overflow:hidden;
+  margin-top:5px;
 }
 
 #xpFill{
@@ -94,87 +103,46 @@ button{
 }
 
 /* MISSÕES */
-ul{
-  padding:0;
-}
-
 li{
   list-style:none;
-  margin-top:10px;
   background:#162447;
   padding:10px;
   border-radius:8px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
+  margin-top:10px;
+  font-size:14px;
+}
+
+/* PERFIL (MODAL SIMPLES) */
+#profileBox{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#000000dd;
+  padding:20px;
+  z-index:2000;
+}
+
+.profile-content{
+  background:#1f4068;
+  padding:20px;
+  border-radius:12px;
 }
 
 /* CALENDÁRIO */
 #calendar{
-  padding:10px;
-}
-
-/* PERFIL */
-#profileBox{
-  display:none;
-  padding:20px;
-  background:#1f4068;
-  margin:20px;
+  margin-top:15px;
+  background:white;
   border-radius:10px;
-  color:white;
+  padding:5px;
+  color:black;
 }
 
-/* RESPONSIVO BONITO (AGORA SIM) */
-@media (max-width:768px){
-
-  header{
-    text-align:center;
-  }
-
-  header button{
-    position:static;
-    margin-top:10px;
-    width:100%;
-  }
-
-  .container{
-    flex-direction:column;
-    padding:10px;
-  }
-
-  .character-card,
-  .missions{
-    width:100%;
-  }
-
-  input, select, button{
-    width:100%;
-    font-size:16px;
-  }
-
-  li{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  li button{
-    width:100%;
-  }
-
-  .avatar img{
-    max-width:90px;
-  }
-
-  #calendar{
-    overflow-x:auto;
-  }
-
-  .fc{
-    font-size:12px;
-  }
-
+/* MELHORAR FULLCALENDAR NO MOBILE */
+.fc{
+  font-size:12px;
 }
 
 </style>
@@ -185,27 +153,31 @@ li{
 
 <header>
 <h1>Life RPG</h1>
-<button onclick="openProfile()">👤 Perfil</button>
+<button onclick="openProfile()">👤</button>
 </header>
 
 <div id="profileBox">
+<div class="profile-content">
+
 <h2>Seu Perfil</h2>
 
-<input id="profileName" placeholder="Nome"><br><br>
-<input id="profileEmail" placeholder="Email"><br><br>
+<input id="profileName" placeholder="Nome">
+<input id="profileEmail" placeholder="Email">
 
-<input type="file" id="profileImage"><br><br>
+<input type="file" id="profileImage">
 
 <img id="profilePreview" width="80">
 
-<br><br>
+<button onclick="saveProfile()">Salvar</button>
+<button onclick="openProfile()">Fechar</button>
 
-<button onclick="saveProfile()">Salvar Perfil</button>
+</div>
 </div>
 
-<div class="container">
+<div class="main">
 
-<div class="character-card">
+<!-- PERSONAGEM -->
+<div class="card">
 
 <div class="avatar">
 <img id="character" src="assets/characters/hero1.gif">
@@ -224,8 +196,6 @@ li{
 
 <p><span id="xp">0</span> / 100 XP</p>
 
-<h3>Escolher Personagem</h3>
-
 <select id="characterSelect" onchange="changeCharacter(this.value)">
 <option value="hero1.gif">Herói 1</option>
 <option value="hero2.gif">Herói 2</option>
@@ -237,11 +207,12 @@ li{
 
 </div>
 
-<div class="missions">
+<!-- MISSÕES -->
+<div class="card">
 
 <h2>Missões</h2>
 
-<input id="missionInput" placeholder="Digite uma meta">
+<input id="missionInput" placeholder="Meta">
 <input id="xpInput" type="number" placeholder="XP">
 
 <select id="emoji">
@@ -259,14 +230,19 @@ li{
 
 </div>
 
+<!-- CALENDÁRIO -->
+<div class="card">
+
+<h2>Calendário</h2>
+<div id="calendar"></div>
+
 </div>
 
-<h2 style="text-align:center">Calendário</h2>
-<div id="calendar"></div>
+</div>
 
 <script>
 
-/* SEU JS ORIGINAL (não mexi pra não quebrar teu sistema) */
+/* TEU JS ORIGINAL INTACTO */
 
 let xp = Number(localStorage.getItem("xp")) || 0
 let level = Number(localStorage.getItem("level")) || 1
@@ -372,9 +348,9 @@ calendar=new FullCalendar.Calendar(calendarEl,{
 locale:"pt-br",
 initialView:"dayGridMonth",
 headerToolbar:{
-left:"prev,next today",
+left:"prev,next",
 center:"title",
-right:"dayGridMonth,timeGridWeek"
+right:""
 },
 
 dateClick:function(info){

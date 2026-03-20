@@ -1,0 +1,173 @@
+body{
+font-family:Arial;
+background:#1b1b2f;
+color:white;
+margin:0;
+}
+
+header{
+background:#162447;
+padding:20px;
+text-align:center;
+}
+
+.container{
+display:flex;
+gap:40px;
+padding:40px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.character-card{
+background:#1f4068;
+padding:20px;
+border-radius:10px;
+width:260px;
+text-align:center;
+}
+
+.avatar{
+width:150px;
+height:150px;
+margin:auto;
+}
+
+.avatar img{
+width:150px;
+height:150px;
+object-fit:contain;
+}
+
+.xp-bar{
+background:#333;
+height:20px;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+#xpFill{
+background:#00ff95;
+height:100%;
+width:0%;
+transition:0.3s;
+}
+
+.missions{
+background:#1f4068;
+padding:20px;
+border-radius:10px;
+width:400px;
+}
+
+input{
+padding:10px;
+margin:5px;
+border:none;
+border-radius:5px;
+}
+
+button{
+padding:10px 20px;
+background:#00ff95;
+border:none;
+cursor:pointer;
+border-radius:5px;
+font-weight:bold;
+}
+
+button:hover{
+background:#00cc77;
+}
+
+li{
+margin-top:10px;
+background:#162447;
+padding:10px;
+border-radius:5px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.calendar-title{
+text-align:center;
+margin-top:30px;
+}
+
+#calendar{
+max-width:900px;
+margin:40px auto;
+background:white;
+padding:20px;
+border-radius:10px;
+color:black;
+}
+/* CALENDARIO RPG */
+
+#calendar{
+max-width:900px;
+margin:40px auto;
+background:#0f0f1a;
+padding:25px;
+border-radius:15px;
+color:white;
+border:3px solid #00ff95;
+box-shadow:0 0 20px #00ff95;
+}
+
+/* titulo do calendario */
+
+.fc-toolbar-title{
+color:#00ff95;
+font-size:26px;
+}
+
+/* botões */
+
+.fc-button{
+background:#162447 !important;
+border:none !important;
+color:white !important;
+}
+
+.fc-button:hover{
+background:#00ff95 !important;
+color:black !important;
+}
+
+/* dias */
+
+.fc-daygrid-day{
+background:#1b1b2f;
+border:1px solid #333;
+}
+
+/* numero do dia */
+
+.fc-daygrid-day-number{
+color:#00ff95;
+font-weight:bold;
+}
+
+/* evento */
+
+.fc-event{
+background:#00ff95 !important;
+border:none !important;
+color:black !important;
+font-weight:bold;
+}
+
+/* efeito RPG */
+
+#calendar::before{
+content:"☠️  QUEST BOARD ☠️";
+display:block;
+text-align:center;
+font-size:22px;
+margin-bottom:15px;
+color:#00ff95;
+letter-spacing:3px;
+}

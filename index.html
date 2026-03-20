@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Life RPG</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/pt-br.global.min.js"></script>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>Life RPG</h1>
+
+<button onclick="openProfile()" style="position:absolute;right:20px;top:20px">
+👤 Perfil
+</button>
+
+</header>
+
+
+<div id="profileBox" style="display:none;padding:20px;background:#1f4068;margin:20px;border-radius:10px">
+
+<h2>Seu Perfil</h2>
+
+<input id="profileName" placeholder="Nome"><br><br>
+<input id="profileEmail" placeholder="Email"><br><br>
+
+<input type="file" id="profileImage"><br><br>
+
+<img id="profilePreview" width="80">
+
+<br><br>
+
+<button onclick="saveProfile()">Salvar Perfil</button>
+
+</div>
+
+
+
+<div class="container">
+
+<div class="character-card">
+
+<div class="avatar">
+<img id="character" src="assets/characters/hero1.gif">
+</div>
+
+<h2 id="playerName">Herói</h2>
+
+<input id="nameInput" placeholder="Novo nome">
+<button onclick="changeName()">Salvar Nome</button>
+
+<p>Nível: <span id="level">1</span></p>
+
+<div class="xp-bar">
+<div id="xpFill"></div>
+</div>
+
+<p><span id="xp">0</span> / 100 XP</p>
+
+<h3>Escolher Personagem</h3>
+
+<select id="characterSelect" onchange="changeCharacter(this.value)">
+<option value="hero1.gif">Herói 1</option>
+<option value="hero2.gif">Herói 2</option>
+<option value="hero3.gif">Herói 3</option>
+<option value="hero4.gif">Herói 4</option>
+<option value="hero5.gif">Herói 5</option>
+<option value="hero6.gif">Herói 6</option>
+</select>
+
+</div>
+
+
+
+<div class="missions">
+
+<h2>Missões</h2>
+
+<input id="missionInput" placeholder="Digite uma meta">
+<input id="xpInput" type="number" placeholder="XP">
+
+<select id="emoji">
+<option>⚔️</option>
+<option>📚</option>
+<option>🏋️</option>
+<option>💻</option>
+<option>🧠</option>
+<option>🔥</option>
+</select>
+
+<button onclick="addMission()">Adicionar</button>
+
+<ul id="missionList"></ul>
+
+</div>
+
+</div>
+
+
+
+<h2 class="calendar-title">Calendário</h2>
+
+<div id="calendar"></div>
+
+
+
+<script>
+
+let xp = Number(localStorage.getItem("xp")) || 0
+let level = Number(localStorage.getItem("level")) || 1
+let missions = JSON.parse(localStorage.getItem("missions")) || []
+let reminders = JSON.parse(localStorage.getItem("reminders")) || []
+
+let calendar
+
+
+
+function loadData(){
+
+document.getElementById("xp").innerText = xp
+document.getElementById("level").innerText = level
+document.getElementById("xpFill").style.width = xp+"%"
+
+const savedName = localStorage.getItem("playerName")
+if(savedName) document.getElementById("playerName").innerText = savedName
+
+const savedCharacter = localStorage.getItem("character")
+if(savedCharacter){
+document.getElementById("character").src="assets/characters/"+savedCharacter
+document.getElementById("characterSelect").value=savedCharacter
+}
+
+renderMissions()
+
+}
+
+
+
+function changeName(){
+
+const name=document.getElementById("nameInput").value
+document.getElementById("playerName").innerText=name
+localStorage.setItem("playerName",name)
+
+}
+
+
+
+function changeCharacter(character){
+
+document.getElementById("character").src="assets/characters/"+character
+localStorage.setItem("character",character)
+
+}
+
+
+
+function addMission(){
+
+const mission=document.getElementById("missionInput").value
+const xpValue=parseInt(document.getElementById("xpInput").value)
+const emoji=document.getElementById("emoji").value
+
+if(!mission || !xpValue) return
+
+const missionData={
+text:mission,
+xp:xpValue,
+emoji:emoji
+}
+
+missions.push(missionData)
+
+localStorage.setItem("missions",JSON.stringify(missions))
+
+renderMissions()
+
+}
+
+
+
+function renderMissions(){
+
+const list=document.getElementById("missionList")
+list.innerHTML=""
+
+missions.forEach((m,i)=>{
+
+const li=document.createElement("li")
+
+li.innerHTML=`
+${m.emoji} ${m.text}
+(+${m.xp} XP)
+<button onclick="completeMission(${i})">Concluir</button>
+`
+
+list.appendChild(li)
+
+})
+
+}
+
+
+
+function completeMission(index){
+
+xp+=missions[index].xp
+
+if(xp>=100){
+xp-=100
+level++
+}
+
+missions.splice(index,1)
+
+localStorage.setItem("missions",JSON.stringify(missions))
+localStorage.setItem("xp",xp)
+localStorage.setItem("level",level)
+
+loadData()
+
+}
+
+
+
+function openProfile(){
+
+const box=document.getElementById("profileBox")
+box.style.display=box.style.display==="none"?"block":"none"
+
+}
+
+
+
+function saveProfile(){
+
+const name=document.getElementById("profileName").value
+const email=document.getElementById("profileEmail").value
+
+localStorage.setItem("profileName",name)
+localStorage.setItem("profileEmail",email)
+
+}
+
+
+
+/* CALENDÁRIO */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+const calendarEl=document.getElementById("calendar")
+
+calendar=new FullCalendar.Calendar(calendarEl,{
+
+locale:"pt-br",
+
+initialView:"dayGridMonth",
+
+headerToolbar:{
+left:"prev,next today",
+center:"title",
+right:"dayGridMonth,timeGridWeek"
+},
+
+dateClick:function(info){
+
+let text=prompt("Escreva um lembrete:")
+
+if(!text) return
+
+const reminder={
+title:"📝 "+text,
+start:info.dateStr
+}
+
+reminders.push(reminder)
+
+localStorage.setItem("reminders",JSON.stringify(reminders))
+
+calendar.addEvent(reminder)
+
+}
+
+})
+
+calendar.render()
+
+/* carregar lembretes */
+
+reminders.forEach(r=>{
+calendar.addEvent(r)
+})
+
+loadData()
+
+})
+
+</script>
+
+</body>
+</html>
